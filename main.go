@@ -52,6 +52,19 @@ func main() {
 	for {
 		n := 0
 
+		pong, err := client.Ping().Result()
+		if err != nil {
+			log.WithFields(log.Fields{
+				"status": "Error",
+				"server": *server,
+				"err":    err,
+				"pong":   pong,
+			}).Error("Can't connect to server")
+
+			time.Sleep(30 * time.Second)
+			continue
+		}
+
 		log.WithFields(log.Fields{
 			"status": fmt.Sprintf("%s started", modeMsg),
 			"key":    *removeKey,
@@ -62,7 +75,13 @@ func main() {
 			var keys []string
 			keys, cursor, err = client.Scan(cursor, *removeKey, 10).Result()
 			if err != nil {
-				panic(err)
+				log.WithFields(log.Fields{
+					"status": "Error",
+					"server": *server,
+					"err":    err,
+				}).Error("Can't retrieve keys data")
+
+				break
 			}
 
 			if !*dryRun {
