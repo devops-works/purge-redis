@@ -21,13 +21,13 @@ docker build -t devopsworks/purge-redis .
 - shell :
 
 ```bash
-./purge-redis -k 'foo*' -s ${REDIS_HOST}:6379 -t 2 -n true #dry mode on
+./purge-redis -k 'foo*' -s ${REDIS_HOST}:6379 -t 2 -n #dry mode on
 ```
 
 - docker :
 
 ```bash
-docker run --rm devopsworks/purge-redis -k 'foo*' -s ${REDIS_HOST}:6379 -t 2 -n true #dry mode on
+docker run --rm devopsworks/purge-redis -k 'foo*' -s ${REDIS_HOST}:6379 -t 2 -n #dry mode on
 ```
 
 ## Options
