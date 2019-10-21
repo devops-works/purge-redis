@@ -24,7 +24,6 @@ func init() {
 
 func main() {
 	var cursor uint64
-	var err error
 	modeMsg := "[PROD MODE]"
 
 	server := flag.String("s", "localhost:6379", "server ip:port")
