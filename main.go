@@ -24,12 +24,13 @@ func init() {
 
 func main() {
 	var cursor uint64
-	var n int
 	var err error
+	modeMsg := "[PROD MODE]"
 
 	server := flag.String("s", "localhost:6379", "server ip:port")
 	removeKey := flag.String("k", "", "key to remove (can contain wildcard; watch out for shell expansion !)")
 	timeWait := flag.Int("t", 1, "number of minutes to wait for next")
+	dryRun := flag.Bool("n", false, "dry run mode, listing how many to delete")
 
 	flag.Parse()
 
@@ -38,15 +39,21 @@ func main() {
 		os.Exit(1)
 	}
 
+	if *dryRun {
+		modeMsg = "[DRY RUN MODE]"
+	}
+
 	client := redis.NewClient(&redis.Options{
 		Addr:     *server,
 		Password: "",
 		DB:       0,
 	})
 
-	for true {
+	for {
+		n := 0
+
 		log.WithFields(log.Fields{
-			"status": "started",
+			"status": fmt.Sprintf("%s started", modeMsg),
 			"key":    *removeKey,
 			"server": *server,
 		}).Info("Removing key")
@@ -58,15 +65,19 @@ func main() {
 				panic(err)
 			}
 
-			client.Del(keys...)
+			if !*dryRun {
+				client.Del(keys...)
+			}
+
 			n += len(keys)
+
 			if cursor == 0 {
 				break
 			}
 		}
 
 		log.WithFields(log.Fields{
-			"status": "deleted",
+			"status": fmt.Sprintf("%s deleted", modeMsg),
 			"key":    *removeKey,
 			"server": *server,
 			"total":  n,

@@ -21,20 +21,21 @@ docker build -t devopsworks/purge-redis .
 - shell :
 
 ```bash
-./purge-redis -k 'foo*' -s ${REDIS_HOST}:6379
+./purge-redis -k 'foo*' -s ${REDIS_HOST}:6379 -t 2 -n true #dry mode on
 ```
 
 - docker :
 
 ```bash
-docker run --rm devopsworks/purge-redis -k 'foo*' -s ${REDIS_HOST}:6379 -t 2
+docker run --rm devopsworks/purge-redis -k 'foo*' -s ${REDIS_HOST}:6379 -t 2 -n true #dry mode on
 ```
 
 ## Options
 
-- `k` : key to remove (can contain wildcard; watch out for shell expansion !)
-- `s` : server, `ip:port` format
-- `t` : time, number of minutes to wait for next trigger
+- `k` : key to remove (default: "") (can contain wildcard; watch out for shell expansion !)
+- `s` : server (default: "localhost:6379"), `ip:port` format
+- `t` : time (default: 1), number of minutes to wait for next trigger
+- `n` : dry run mode (default: false), listing how many to delete
 
 ## Caveats
 
