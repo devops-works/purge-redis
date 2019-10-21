@@ -52,12 +52,12 @@ func main() {
 	for {
 		n := 0
 
-		pong, errp := client.Ping().Result()
-		if errp != nil {
+		pong, err := client.Ping().Result()
+		if err != nil {
 			log.WithFields(log.Fields{
 				"status": "Error",
 				"server": *server,
-				"err":    errp,
+				"err":    err,
 				"pong":   pong,
 			}).Error("Can't connect to server")
 
